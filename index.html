@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="img/dinheiroIconPage.png" type="image/x-icon">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="headPage">
+            <p>Sistema de Finanças</p>
+            <img src="/img/dinheiroIconPrincipal.png" alt="dinheiro" style="width: 100px;">
+        </div>
+        <form>
+            <label for="nemailUser">email:</label>
+            <input type="email" name="emailUser" id="inputEmailUser">
+            <span class="erro"></span>
+
+            <label for="passwordUser">Senha:</label>
+            <input type="password" name="password" id="inputPasswordUser">
+            <span class="erro"></span>
+        </form>
+        <button type="submit" class="allButton" id="buttonLogin">Entrar</button>
+        <div class="footerRegister">
+            <p>Não possui uma conta? <a href="/singUp/singUp.html">Cadastre-se</a></p>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        
+ const buttonLogin = document.getElementById("buttonLogin");
+const errorMessages = document.querySelectorAll(".erro");
+
+buttonLogin.addEventListener("click", async () => {
+    errorMessages.forEach(span => span.textContent = "");
+
+    const email = document.getElementById("inputEmailUser").value;
+    const senha = document.getElementById("inputPasswordUser").value;
+
+    if (!email || !senha) {
+        errorMessages[1].textContent = "Preencha todos os campos";
+        return;
+    }
+
+    const senhaCriptografada = CryptoJS.MD5(senha).toString();
+
+    const dados = { email, senha: senhaCriptografada };
+
+    try {
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados)
+        });
+
+        const text = await response.text();
+
+        if (response.status === 200) {
+            alert(text);
+            window.location.href = "./page/financeiro.html";
+        } else {
+            alert(text);
+        }
+    } catch (err) {
+        console.log(err);
+        alert("Erro ao conectar com o servidor.");
+    }
+});
+
+    </script>
+</body>
+</html>

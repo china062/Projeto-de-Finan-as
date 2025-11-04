@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="shortcut icon" href="/img/dinheiroIconPage.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <div class="headPage">
+            <h1>Cadastro</h1>
+        </div>
+        <form id="registerForm">
+            <label for="nomeUserRegistro">Usuário</label>
+            <input type="text" name="nomeUserRegistro" id="nomeUserRegistro" required>
+            <span class="erro"></span>
+
+            <label for="emailUserRegistro">Email</label>
+            <input type="email" name="emailUserRegistro" id="emailUserRegistro" required>
+            <span class="erro"></span>
+
+            <label for="senhaUserRegistro">Senha</label>
+            <input type="password" name="senhaUserRegistro" id="senhaUserRegistro" required>
+            <span class="erro"></span>
+
+            <label for="confirmpasswordUserRegistro">Confirmar Senha</label>
+            <input type="password" name="confirmpasswordUserRegistro" id="confirmarSenhaUserRegistro" required>
+            <span class="erro"></span>
+
+            <button type="submit" id="buttonRegister" class="allButton">Cadastrar</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="/singUp/singUp.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f4f6;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #999;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 5px #2563eb;
+}
+
+.headPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.allButton {
+    background-color: #651f71;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.allButton:hover {
+    background-color: #651f71dc;
+}
+
+a {
+  text-decoration: none;
+  color: #0000FF;
+}
+
+.erro {
+    display: block;
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
