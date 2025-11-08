@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registrar Gastos</title>
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="registrarSaldo.css">
+<link rel="shortcut icon" href="./../../img/dinheiroIconPage.png" type="image/x-icon">
+</head>
+<body>
+<div class="container">
+    <div class="headPage">
+        <p>Registrar Saldo</p>
+    </div>
+    <div class="container-entrada-saldo">
+        <label for="valorRegistro">Insira o valor que deseja registrar ou retirar:</label>
+        <input type="text" id="valorRegistro" placeholder="R$ 0,00">
+        <div class="buttonsRow">
+            <button class="allButton buttonRegisterValue" id="buttonRegistrar">
+                <img src="/img/seta-cima.png" alt="seta-cima" style="width: 20px;"> Registrar
+            </button>
+            <button class="allButton buttonRegisterValue" id="buttonRetirar">
+                <img src="/img/seta.png" alt="seta-baixo" style="width: 20px;"> Retirar
+            </button>
+        </div>
+        <button class="allButton" id="buttonSair"> Cancelar </button>
+    </div>
+</div>
+
+<script>
+const inputValor = document.getElementById("valorRegistro");
+const buttonRegistrar = document.getElementById("buttonRegistrar");
+const buttonRetirar = document.getElementById("buttonRetirar");
+const buttonSair = document.getElementById("buttonSair")
+
+buttonSair.addEventListener("click", () => {
+    window.location.href = "/page/financeiro.html";
+})
+
+// Máscara de moeda BRL
+inputValor.addEventListener("input", (e) => {
+    let value = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
+    value = (Number(value) / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    e.target.value = value;
+});
+
+// Permitir apenas números no input
+inputValor.addEventListener("keydown", (e) => {
+    if (["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) return;
+    if (!/[0-9]/.test(e.key)) e.preventDefault();
+});
+
+async function registrarTransacao(tipo) {
+    // Converte o valor de R$ para número
+    const valorText = inputValor.value.replace(/[R$\s]/g, "").replace(".", "").replace(",", ".");
+    const valor = parseFloat(valorText);
+
+    if (isNaN(valor) || valor <= 0) {
+        alert("Insira um valor válido.");
+        return;
+    }
+
+    const dados = {
+        tipo,
+        valor,
+        descricao: tipo === "entrada" ? "Depósito" : "Retirada"
+    };
+
+    // bloco de codigo usado para realizar a transação na conta
+    // a transação é de acordo com o userId, então para cada cadastro tera saldos e transações diferentes
+    try {
+        const response = await fetch("http://localhost:3000/transacoes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados),
+            credentials: "include"
+        });
+
+        const text = await response.text();
+        if (!response.ok) {
+            alert(text);
+            return;
+        }
+
+        alert("Transação registrada com sucesso!");
+        inputValor.value = "";
+        window.location.href = "/page/financeiro.html";
+    } catch (err) {
+        console.error("Erro ao registrar transação:", err);
+        alert("Erro ao conectar com o servidor.");
+    }
+}
+
+buttonRegistrar.addEventListener("click", () => registrarTransacao("entrada"));
+buttonRetirar.addEventListener("click", () => registrarTransacao("saida"));
+</script>
+</body>
+</html>

@@ -1,11 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Financeiro</title>
+  <link rel="stylesheet" href="financeiro.css">
+  <link rel="shortcut icon" href="./../img/dinheiroIconPage.png" type="image/x-icon">
 </head>
 <body>
-    <h1>Olá mundo!</h1>
+  <header>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="">Início</a></li>
+        <li><a href="/page/registrarSaldo/registrarSaldo.html">Registrar Gastos</a></li>
+        <li><a href="/page/mostrarPerfil/mostrarPerfil.html">Meu Perfil</a></li>
+      </ul>
+      <div class="mobile-menu">
+        <img src="/img/menu-aberto.png" id="menu" nome="menu" style="width: 30px;">
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="box-inf" id="container-saldo-atual">
+        <h5>Saldo Atual</h5>
+        <p id="saldo-atual">R$ 0,00</p>
+      </div>
+      <div class="box-inf" id="container-entrada-saldo">
+        <h5>Entradas</h5>
+        <p id="saldo-entradas">R$ 0,00</p>
+      </div>
+      <div class="box-inf" id="container-saida-saldo">
+        <h5>Saídas</h5>
+        <p id="saldo-saidas">R$ 0,00</p>
+      </div>
+    </div>
+
+    <section class="transacoes-container">
+      <h3>Últimas Transações</h3>
+      <ul id="lista-transacoes"></ul>
+    </section>
+  </main>
+
+  <script>
+    async function carregarTransacoes() {
+      // bloco try usado para (GET) pegar as transações do backend e mostrar no front
+      try {
+        const response = await fetch("http://localhost:3000/transacoes", {
+          method: "GET",
+          credentials: "include"
+        });
+
+        const transacoes = await response.json();
+
+        // elementos do DOM
+        const lista = document.getElementById("lista-transacoes");
+        const saldoAtualEl = document.getElementById("saldo-atual");
+        const entradasEl = document.getElementById("saldo-entradas");
+        const saidasEl = document.getElementById("saldo-saidas");
+
+        lista.innerHTML = "";
+
+        let totalEntradas = 0;
+        let totalSaidas = 0;
+
+        // atualização do DOM
+        transacoes.forEach(t => {
+          const li = document.createElement("li");
+          li.textContent = `${t.tipo === 'entrada' ? '+' : '-'} R$ ${t.valor.toFixed(2)} — ${t.descricao}`;
+          li.classList.add(t.tipo === "entrada" ? "entrada" : "saida");
+          lista.appendChild(li);
+
+          if (t.tipo === "entrada") totalEntradas += t.valor;
+          else totalSaidas += t.valor;
+        });
+
+        const saldoAtual = totalEntradas - totalSaidas;
+        
+        // atualização do DOM
+        saldoAtualEl.textContent = `R$ ${saldoAtual.toFixed(2)}`;
+        entradasEl.textContent = `R$ ${totalEntradas.toFixed(2)}`;
+        saidasEl.textContent = `R$ ${totalSaidas.toFixed(2)}`;
+      } catch (err) {
+        console.error("Erro ao carregar transações:", err);
+        alert("Erro ao carregar dados.");
+      }
+    }
+
+    carregarTransacoes();
+  </script>
 </body>
 </html>

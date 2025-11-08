@@ -6,7 +6,7 @@
     <title>Finanças</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="img/dinheiroIconPage.png" type="image/x-icon">
-    <script src="script.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -15,7 +15,7 @@
             <img src="/img/dinheiroIconPrincipal.png" alt="dinheiro" style="width: 100px;">
         </div>
         <form>
-            <label for="nemailUser">email:</label>
+            <label for="nemailUser">Email:</label>
             <input type="email" name="emailUser" id="inputEmailUser">
             <span class="erro"></span>
 
@@ -28,48 +28,57 @@
             <p>Não possui uma conta? <a href="/singUp/singUp.html">Cadastre-se</a></p>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script>
-        
- const buttonLogin = document.getElementById("buttonLogin");
+
+<script>
+const buttonLogin = document.getElementById("buttonLogin");
 const errorMessages = document.querySelectorAll(".erro");
 
 buttonLogin.addEventListener("click", async () => {
     errorMessages.forEach(span => span.textContent = "");
 
-    const email = document.getElementById("inputEmailUser").value;
-    const senha = document.getElementById("inputPasswordUser").value;
+    const email = document.getElementById("inputEmailUser").value.trim();
+    const senha = document.getElementById("inputPasswordUser").value.trim();
 
     if (!email || !senha) {
         errorMessages[1].textContent = "Preencha todos os campos";
         return;
     }
 
+    // metodo de criptografia de senha (MD5)
     const senhaCriptografada = CryptoJS.MD5(senha).toString();
 
+    // pega o email e senha e guarda na constante
     const dados = { email, senha: senhaCriptografada };
 
+    // try é um bloco de codigo que realmente pode ocorrer um erro que qnd ocorrido passa para o bloco catch
     try {
-        const response = await fetch("/login", {
+        // pega a constante com o email e a senha e transforma em JSON
+        const response = await fetch("http://localhost:3000/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dados)
+            credentials: "include",
+            body: JSON.stringify(dados),
         });
 
         const text = await response.text();
 
-        if (response.status === 200) {
+        // If de verificação se response está sendo aplicada (erro ao logar/email ou senha errada)
+        if (!response.ok) {
             alert(text);
-            window.location.href = "./page/financeiro.html";
-        } else {
-            alert(text);
+            return;
         }
+
+        const data = JSON.parse(text);
+
+        localStorage.setItem("userId", data.userId);
+        // Login autorizado e é redirecionado para a pagina inicial
+        alert(data.message);
+        window.location.href = "/page/financeiro.html";
     } catch (err) {
-        console.log(err);
+        console.error("Erro no fetch:", err);
         alert("Erro ao conectar com o servidor.");
     }
 });
-
-    </script>
+</script>
 </body>
 </html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="./../../style.css">
+    <link rel="stylesheet" href="/page/mostrarPerfil/mostrarPerfil.css">
+    <link rel="shortcut icon" href="./../../img/dinheiroIconPage.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <h2><img src="/img/do-utilizador.png" alt="imagemUtilizador" style="width: 20px;">Perfil</h2>
+        <p>Seja bem vindo ao seu melhor sistemas de Finanças!</p>
+        <button class="allButton" id="buttonRegistrar" style="width: 200px;">Registrar Gastos</button>
+        <button class="allButton" id="buttonSair">Sair</button>
+    </div>
+    <script>
+        const buttonRegistrar = document.getElementById("buttonRegistrar");
+
+        buttonRegistrar.addEventListener("click", () => {
+            window.location.href = "./../registrarSaldo/registrarSaldo.html"
+        })
+
+        const buttonSair = document.getElementById("buttonSair");
+
+        buttonSair.addEventListener("click", () => {
+            localStorage.removeItem("userId");
+
+            fetch("http://localhost:3000/logout", {
+                method: "POST",
+                credentials: "include",
+            }).finally(() => {
+                window.location.href = "/index.html"
+            })
+        })
+    </script>
+</body>
+</html>

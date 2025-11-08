@@ -23,11 +23,13 @@ async function eventRegister(event) {
     errorMessages.forEach(span => span.textContent = "");
     let errorMsg = false;
 
+    // verificação se a senha contém menos que 6 caracteres
     if (inputPassword.value.length < 6) {
         errorMessages[2].textContent = "Sua senha deve conter pelo menos 6 caracteres.";
         errorMsg = true;
     }
 
+    // verificação se a senha contém pelo menos um caracter
     if (!inputPassword.value.includes("!") &&
         !inputPassword.value.includes("@") &&
         !inputPassword.value.includes("#") &&
@@ -36,6 +38,7 @@ async function eventRegister(event) {
         errorMsg = true;
     }
 
+    // verificação se os dois inputs da senha no momento do cadastro está iguais
     if (inputConfirmPassword.value !== inputPassword.value) {
         errorMessages[3].textContent = "As senhas devem ser iguais.";
         errorMsg = true;
@@ -50,12 +53,14 @@ async function eventRegister(event) {
     let senhaCriptografada = criptografarSenha(inputPassword.value)
     let confirmarSenhaCriptografada = criptografarSenha(inputConfirmPassword.value)
 
+    // pega todo o conteudo e armazena para depois realizar a transferencia de dados para JSON
     const dados = {
         nome: inputName.value,
         email: inputEmail.value,
         senha: senhaCriptografada
     };
 
+    // bloco de codigo usado para subir o cadastro para o banco de dados tranformando todo o conteudo em JSON
     try {
         const res = await fetch("http://localhost:3000/register", {
             method: "POST",
